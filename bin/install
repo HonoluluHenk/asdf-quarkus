@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+install_quarkus() {
+	local version=$1
+	local destdir=$2
+
+	download $version $destdir
+}
+
+download() {
+	local version=$1
+	local destdir=$2
+
+	local jar="quarkus-cli-$version-runner.jar"
+	local url="https://repo1.maven.org/maven2/io/quarkus/quarkus-cli/$version/$jar"
+
+	curl -fLC - --retry 3 --retry-delay 3 -o "$destdir/$jar" "$url"
+
+	create_starter $destdir $jar
+}
+
+create_starter() {
+	local destdir=$1
+	local jar=$2
+
+	mkdir "$destdir/bin"
+	cat >"$destdir/bin/quarkus" <<EOF
+#!/usr/bin/env sh
+exec java -jar "$ASDF_INSTALL_PATH/$jar" "\$@"
+EOF
+	chmod +x "$destdir/bin/quarkus"
+}
+
+install_quarkus $ASDF_INSTALL_VERSION $ASDF_INSTALL_PATH
+
+	
