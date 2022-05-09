@@ -1,36 +1,44 @@
 #!/usr/bin/env bash
+set -eo pipefail
 
-install_quarkus() {
-	local version=$1
-	local destdir=$2
+installer() {
+  local install_type=$1
+  local version=$2
+  local install_path=$3
 
-	download $version $destdir
+  local tmp_download_dir
+  tmp_download_dir=$(mktemp -d -t quarkus_XXXXXXX)
+
+  if [ "version" != "${install_type}" ]; then
+    echo "The asdf-quarkus plugin only supports intalling official"
+    echo "binary releases as built by the Quarkus team."
+    echo "If you want to install another version from source, see:"
+    echo "https://github.com/quarkusio/quarkus/"
+    exit 1
+  fi
+
+  local url
+  url="$(download_url "$version")"
+  # running this in a subshell
+  # we don't want to disturb current working dir
+  (
+    set -e
+
+    local tar_path="$tmp_download_dir/quarkus-cli-${version}.tar.gz"
+    curl -Lo "$tar_path" "$url" || fail "could not download quarkus archive from: $url"
+    tar -xf "$tar_path" -C "$install_path" --strip-components=1 || fail "failed to extract quarkus archive: $tar_path"
+    rm -rf -- "$tmp_download_dir" || fail "Could not delete temporary directory: $tmp_download_dir"
+  ) || (rm -rf -- "$install_path"; exit 1)
 }
 
-download() {
-	local version=$1
-	local destdir=$2
-
-	local jar="quarkus-cli-$version-runner.jar"
-	local url="https://repo1.maven.org/maven2/io/quarkus/quarkus-cli/$version/$jar"
-
-	curl -fLC - --retry 3 --retry-delay 3 -o "$destdir/$jar" "$url"
-
-	create_starter $destdir $jar
+download_url() {
+  local version=$1
+  echo "https://github.com/quarkusio/quarkus/releases/download/${version}/quarkus-cli-${version}.tar.gz"
 }
 
-create_starter() {
-	local destdir=$1
-	local jar=$2
-
-	mkdir "$destdir/bin"
-	cat >"$destdir/bin/quarkus" <<EOF
-#!/usr/bin/env sh
-exec java -jar "$ASDF_INSTALL_PATH/$jar" "\$@"
-EOF
-	chmod +x "$destdir/bin/quarkus"
+fail() {
+  echo "asdf-quarkus error: " "$@"
+  exit 1
 }
 
-install_quarkus $ASDF_INSTALL_VERSION $ASDF_INSTALL_PATH
-
-	
+installer "$ASDF_INSTALL_TYPE" "$ASDF_INSTALL_VERSION" "$ASDF_INSTALL_PATH"
