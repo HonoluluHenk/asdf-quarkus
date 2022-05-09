@@ -1,0 +1,9 @@
+### VS Code
+.vscode/*
+*.code-workspace
+.history/
+
+### IntelliJ IDEA
+.idea/
+*.iml
+*.iws
