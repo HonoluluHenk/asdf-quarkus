@@ -9,19 +9,19 @@ on:
 
 jobs:
 
-#  plugin-linting:
-#    runs-on: ubuntu-latest
-#    env:
-#      TERM: dumb
-#    steps:
-#      - uses: actions/checkout@v2
-#      - uses: mstksg/get-package@v1
-#        with:
-#          apt-get: shellcheck
-#      - name: Run ShellCheck
-#        run: |
-#          shellcheck -V
-#          shellcheck ./bin/*
+  plugin-linting:
+    runs-on: ubuntu-latest
+    env:
+      TERM: dumb
+    steps:
+      - uses: actions/checkout@v2
+      - uses: mstksg/get-package@v1
+        with:
+          apt-get: shellcheck
+      - name: Run ShellCheck
+        run: |
+          shellcheck -V
+          shellcheck ./bin/*
 
   plugin-tests:
     runs-on: ${{ matrix.os }}
@@ -29,7 +29,7 @@ jobs:
       matrix:
         os:
           - macos-latest
-#          - ubuntu-latest
+          - ubuntu-latest
     env:
       TERM: dumb
       GITHUB_API_TOKEN: ${{ github.token }}
