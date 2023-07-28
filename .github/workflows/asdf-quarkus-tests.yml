@@ -42,4 +42,7 @@ jobs:
       - run: java -version
       - run: echo "java_macos_integration_enable = yes" > ~/.asdfrc
         if: runner.os == 'macOS'
-      - run: asdf plugin-test quarkus-cli "$GITHUB_WORKSPACE" --asdf-plugin-gitref "$GITHUB_SHA" --asdf-tool-version 3.2.2.Final quarkus -version
+      - run: |
+          . $ASDF_DIR/plugins/java/set-java-home.bash
+          env | sort
+          asdf plugin-test quarkus-cli "$GITHUB_WORKSPACE" --asdf-plugin-gitref "$GITHUB_SHA" --asdf-tool-version 3.2.2.Final quarkus -version
