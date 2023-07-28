@@ -4,7 +4,7 @@ set -euo pipefail
 readonly github_coordinates=quarkusio/quarkus
 readonly releases_path="https://api.github.com/repos/${github_coordinates}/releases"
 cmd="curl -Ls"
-if [ -n "$GITHUB_API_TOKEN" ]; then
+if [ -n "${GITHUB_API_TOKEN:-}" ]; then
   cmd="$cmd -H 'Authorization: token $GITHUB_API_TOKEN'"
 fi
 cmd="$cmd $releases_path"
