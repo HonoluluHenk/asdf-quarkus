@@ -8,11 +8,11 @@ on:
       - "**.md"
 
 jobs:
+
   plugin-linting:
     runs-on: ubuntu-latest
     env:
       TERM: dumb
-
     steps:
       - uses: actions/checkout@v2
       - uses: mstksg/get-package@v1
@@ -30,15 +30,14 @@ jobs:
         os:
           - macos-latest
           - ubuntu-latest
-    env:
-      TERM: dumb
-
     steps:
       - name: install java
         uses: asdf-vm/actions/install@v2
         with:
           tool_versions: "java temurin-11.0.20+8"
+      - run: java -version
       - name: asdf_plugin_test
         uses: asdf-vm/actions/plugin-test@v2
+
         with:
           command: quarkus version
