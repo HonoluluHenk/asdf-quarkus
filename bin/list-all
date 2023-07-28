@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 readonly github_coordinates=quarkusio/quarkus
 readonly releases_path="https://api.github.com/repos/${github_coordinates}/releases"
