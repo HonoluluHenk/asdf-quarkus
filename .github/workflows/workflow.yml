@@ -35,7 +35,7 @@ jobs:
 
     steps:
       - name: install java
-        uses: asdf-vm/actions/install
+        uses: asdf-vm/actions/install@v2
         with:
           tool_versions: "java temurin-11.0.20+8"
       - name: asdf_plugin_test
