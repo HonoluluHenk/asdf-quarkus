@@ -40,9 +40,10 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
       - run: java -version
-      - name: install asdf-vm
-        uses: asdf-vm/actions/install@v2
       - run: |
           env | sort
           which java
-          asdf plugin-test quarkus-cli "$GITHUB_WORKSPACE" --asdf-plugin-gitref "$GITHUB_SHA" --asdf-tool-version 3.2.2.Final quarkus -version
+      - name: asdf_plugin_test
+        uses: asdf-vm/actions/plugin-test@v2
+        with:
+          command: quarkus version
