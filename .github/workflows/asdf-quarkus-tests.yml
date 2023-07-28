@@ -40,6 +40,8 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
       - run: java -version
+      - name: install asdf-vm
+        uses: asdf-vm/actions/install@v2
       - run: |
           env | sort
           which java
