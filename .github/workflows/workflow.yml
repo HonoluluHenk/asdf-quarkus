@@ -30,14 +30,12 @@ jobs:
         os:
           - macos-latest
           - ubuntu-latest
+    env:
+      GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: install java
         uses: asdf-vm/actions/install@v2
         with:
           tool_versions: "java temurin-11.0.20+8"
       - run: java -version
-      - name: asdf_plugin_test
-        uses: asdf-vm/actions/plugin-test@v2
-
-        with:
-          command: quarkus version
+      - run: asdf plugin-test quarkus-cli "$GITHUB_WORKSPACE" --asdf-plugin-gitref "$GITHUB_SHA" --asdf-tool-version 3.2.2.Final quarkus -version
