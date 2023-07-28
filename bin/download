@@ -2,6 +2,7 @@
 set -euo pipefail
 
 script_dir=$(dirname "$0")
+# shellcheck source=./functions
 source "${script_dir}/functions"
 
 download "$ASDF_INSTALL_TYPE" "$ASDF_INSTALL_VERSION" "$ASDF_DOWNLOAD_PATH"

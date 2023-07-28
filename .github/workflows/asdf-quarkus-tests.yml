@@ -19,9 +19,10 @@ jobs:
         with:
           apt-get: shellcheck
       - name: Run ShellCheck
+        working-directory: bin
         run: |
           shellcheck -V
-          shellcheck ./bin/*
+          shellcheck ./*
 
   plugin-tests:
     runs-on: ${{ matrix.os }}
