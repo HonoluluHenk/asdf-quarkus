@@ -32,7 +32,6 @@ jobs:
           - ubuntu-latest
     env:
       TERM: dumb
-      GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: install java
         uses: asdf-vm/actions/install@v2
