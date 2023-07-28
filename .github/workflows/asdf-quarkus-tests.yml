@@ -32,6 +32,7 @@ jobs:
 #          - ubuntu-latest
     env:
       TERM: dumb
+      GITHUB_API_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v2
       - name: install java
