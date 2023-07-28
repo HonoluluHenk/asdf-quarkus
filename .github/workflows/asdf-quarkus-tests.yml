@@ -35,14 +35,12 @@ jobs:
       GITHUB_API_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v2
-      - name: install java
-        uses: asdf-vm/actions/install@v2
+      - uses: actions/setup-java@v3
         with:
-          tool_versions: "java temurin-11.0.20+8"
+          distribution: 'temurin'
+          java-version: '11'
       - run: java -version
-      - run: echo "java_macos_integration_enable = yes" > ~/.asdfrc
-        if: runner.os == 'macOS'
       - run: |
-          . $ASDF_DIR/plugins/java/set-java-home.bash
           env | sort
+          which java
           asdf plugin-test quarkus-cli "$GITHUB_WORKSPACE" --asdf-plugin-gitref "$GITHUB_SHA" --asdf-tool-version 3.2.2.Final quarkus -version
