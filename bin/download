@@ -4,4 +4,4 @@ set -euo pipefail
 script_dir=$(dirname "$0")
 source "${script_dir}/functions"
 
-install "$ASDF_INSTALL_TYPE" "$ASDF_INSTALL_VERSION" "$ASDF_INSTALL_PATH" "$ASDF_DOWNLOAD_PATH"
+download "$ASDF_INSTALL_TYPE" "$ASDF_INSTALL_VERSION" "$ASDF_DOWNLOAD_PATH"

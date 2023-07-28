@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+download() {
+  local install_type="$1"
+  local version="$2"
+  local download_path="$3"
+
+  echo Download to "${download_path}"
+
+  local tmp_download_dir
+  tmp_download_dir=$(mktemp -d -t quarkus_XXXXXXX)
+
+  if [ "version" != "${install_type}" ]; then
+    echo "The asdf-quarkus plugin only supports intalling official"
+    echo "binary releases as built by the Quarkus team."
+    echo "If you want to install another version from source, see:"
+    echo "https://github.com/quarkusio/quarkus/"
+    exit 1
+  fi
+
+  local url
+  url="$(download_url "${version}")"
+
+  local tar_path="${tmp_download_dir}/quarkus-cli-${version}.tar.gz"
+  echo "Downloading: ${url}" >&2
+  curl -Lo "${tar_path}" "${url}" || fail "could not download quarkus archive from: ${url}"
+  tar -xf "${tar_path}" -C "${download_path}" --strip-components=1 || fail "failed to extract quarkus archive: ${tar_path}"
+  rm -rf -- "${tmp_download_dir}" || fail "Could not delete temporary directory: ${tmp_download_dir}"
+}
+
+install() {
+  local install_type="${1}"
+  local version="${2}"
+  local install_path="${3}"
+  local download_path="${4}"
+
+  if [ ! -d "${download_path}" ]; then
+    download "${install_type}" "${version}" "${download_path}"
+  fi
+
+  cp -a -- "${download_path}"/* "${install_path}"
+}
+
+download_url() {
+  local version="${1}"
+  echo "https://github.com/quarkusio/quarkus/releases/download/${version}/quarkus-cli-${version}.tar.gz"
+}
+
+fail() {
+  echo "asdf-quarkus error: " "$@"
+  exit 1
+}
